@@ -83,8 +83,8 @@ export default class NotePad extends React.Component{
     gNote = (ID) => {
         switch(this.state.online){
             case true:
-                break;
-            default:
+                let token = localStorage.getItem('token');
+                // 修改本地缓存
                 let noteList = this.state.noteList;
                 noteList.forEach((note,index)=>{
                     if(note.noteID === ID){
@@ -94,7 +94,24 @@ export default class NotePad extends React.Component{
                 this.setState({
                     noteList
                 })
-                localStorage.setItem('noteList',JSON.stringify(noteList));
+                sessionStorage.setItem('noteList',JSON.stringify(noteList));
+                //发送网络请求
+                axios.post(`https://qnote.qfstudio.net/api/note/giveUpTask`,{
+                    noteID:ID,
+                    token:token
+                })
+                break;
+            default:
+                let noteList2 = this.state.noteList;
+                noteList2.forEach((note,index)=>{
+                    if(note.noteID === ID){
+                        noteList2.splice(index,1);
+                    }
+                })
+                this.setState({
+                    noteList2
+                })
+                localStorage.setItem('noteList',JSON.stringify(noteList2));
                 break;
         }
     }
@@ -102,6 +119,7 @@ export default class NotePad extends React.Component{
     dNote = (ID) => {
         switch(this.state.online){
             case true:
+                let token = localStorage.getItem('token');
                 break;
             default:
                 let noteList = this.state.noteList;
@@ -121,6 +139,7 @@ export default class NotePad extends React.Component{
     cNote = (ID) => {
         switch(this.state.online){
             case true:
+                let token = localStorage.getItem('token');
                 break;
             default:
                 let noteList = this.state.noteList;
