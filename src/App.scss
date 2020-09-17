@@ -1,0 +1,70 @@
+.App {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: cemter;
+  align-items: center;
+
+  nav{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+    background: rgba(0, 151, 230,.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    section{
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 8%;
+      text-align: center;
+      border-top: solid 1px rgba(113, 128, 147,1.0);
+      border-bottom: solid 1px rgba(113, 128, 147,1.0);
+      i{
+        display: inline-block;
+        width: 20%;
+        text-align: right;
+        font-size: 1.5rem;
+        color: #fff;
+      }
+
+      a{
+        display: inline-block;
+        width: 80%;
+        text-decoration: none;
+        font-size: 1.2rem;
+        color: #fff;
+      }
+    }
+
+    section:nth-of-type(5){
+      position: absolute;
+      bottom: 0;
+      border: 0;
+    }
+
+    section:hover{
+      box-shadow:inset 0px 0px 10px #fff;
+    }
+  
+  }
+
+  .container{
+    position: relative;
+    width: 80%;
+    height: 100%;
+    background: rgba(220, 221, 225,.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+ 
+}
