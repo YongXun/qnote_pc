@@ -53,11 +53,26 @@ class UserPad extends React.Component{
                     this.setState({
                         online:true
                     })
-                    let user = JSON.parse(sessionStorage.getItem('user') || '[]');
-                    let noteList = JSON.parse(sessionStorage.getItem('noteList') || '[]');
-                    this.setState({
-                        user:user,
-                        noteList:noteList
+                    axios.get(`https://qnote.qfstudio.net/api/user/getMessage`,{
+                        params:{
+                            token:localStorage.getItem('token')
+                        }
+                    })
+                    .then(res=>{
+                        this.setState({
+                            user:res.data.user
+                        })
+                        sessionStorage.setItem('user',JSON.stringify(res.data.user));
+                        sessionStorage.setItem('noteList',JSON.stringify(res.data.note));
+                        this.setState({
+                            user:res.data.user,
+                            noteList:res.data.noteList
+                        })
+                        //隐藏登录框
+                        this.hideShowIn();
+                    })
+                    .catch((err)=>{
+                        console.log(err);
                     })
                 }
                 // 无效token

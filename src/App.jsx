@@ -3,6 +3,7 @@ import { HashRouter as Router, Link, Route } from 'react-router-dom';
 import { message } from 'antd';
 import UserPad from './pages/userpad'
 import NotePad from './pages/notepad'
+import MottoPad from './pages/mottopad'
 import './App.scss';
 
 message.config({
@@ -40,16 +41,17 @@ export default class App extends React.Component{
             </section>
             <section>
               <i className="iconfont icon-liuyan"></i> 
-              <Link>经典语录</Link>
+              <Link to="./motto" >经典语录</Link>
             </section>
             <section>
               <i className="iconfont icon-shezhi"></i> 
-              <Link onClick={()=>{message.info('功能维护中')}}>应用设置</Link>
+              <Link onClick={()=>{message.info('功能开发中')}}>应用设置</Link>
             </section>
           </nav>
           <main className="container">
             <Route exact path="/" component={UserPad}></Route>
             <Route path="/note" component={NotePad}></Route>
+            <Route path="/motto" component={MottoPad}></Route>
           </main>
         </Router>
       </div>

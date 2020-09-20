@@ -6,7 +6,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    background: inherit;
+    background-color: rgba(220, 221, 225,0.4);
     overflow: hidden;
 
     header{
@@ -16,7 +16,7 @@
         flex-direction: row;
         justify-items: flex-start;
         align-items: center;
-        border-bottom: solid 1px rgba(127, 140, 141,.5);
+        border-bottom: solid 1px rgba(127, 140, 141,.4);
 
         .signin-btn{
             margin:0 0.5rem 0 2rem;
@@ -56,7 +56,7 @@
             font-size: 2rem;
             right: 1rem;
             top: 1rem;
-            color: rgba(47, 54, 64,1.0);
+            color: rgba(47, 54, 64,.4);
         }
 
         .input-bar{
@@ -76,7 +76,7 @@
                 border-right: solid 1px gray;
 
                 i{
-                    color: rgba(47, 54, 64,1.0);
+                    color: rgba(47, 54, 64,.4);
                     font-size: 1.2rem;
                 }
             }
@@ -97,7 +97,7 @@
             top: 0;
             left: -100%;
             z-index: 999;
-            background: rgba(220, 221, 225,1.0);
+            background: rgba(220, 221, 225,1);
 
             .signin{
                 position: relative;
