@@ -43,10 +43,10 @@ export default class App extends React.Component{
               <i className="iconfont icon-liuyan"></i> 
               <Link to="./motto" >经典语录</Link>
             </section>
-            <section>
+            {/* <section>
               <i className="iconfont icon-shezhi"></i> 
               <Link onClick={()=>{message.info('功能开发中')}}>应用设置</Link>
-            </section>
+            </section> */}
           </nav>
           <main className="container">
             <Route exact path="/" component={UserPad}></Route>

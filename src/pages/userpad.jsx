@@ -324,7 +324,7 @@ class UserPad extends React.Component{
                         <div className="avatar-area">
                             {/* 头像组件 */}
                             <Avatar 
-                            size={128}
+                            size={150}
                             src={this.state.avatarURL?this.state.avatarURL:''}
                             icon={<UserOutlined/>}
                             />
@@ -332,7 +332,7 @@ class UserPad extends React.Component{
                                 {/* 上传/更换头像 */}
                             </div>
                         </div>
-                        <div>
+                        <div className="username">
                             用户:{this.state.online?this.state.user.username:"游客"}
                         </div>
                     </div>
