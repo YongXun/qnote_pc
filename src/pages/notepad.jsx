@@ -18,7 +18,16 @@ export default class NotePad extends React.Component{
         this.state = {
             online:false,
             noteList:[],
-            info:''
+            info:'',
+            user:{
+                id:'string',
+                username:'string',
+                email:'string',
+                noteNum:0,
+                completeNoteNum:0,
+                currentNoteNum:0,
+                giveUpNoteNum:0
+            }
         }
     }
 
@@ -35,16 +44,18 @@ export default class NotePad extends React.Component{
         else{
             console.log('事务列表-登录状态');
             let noteList = JSON.parse(sessionStorage.getItem('noteList') || '[]');
+            let user = JSON.parse(sessionStorage.getItem('user') || '[]');
             this.setState({
                 online:true,
-                noteList:noteList
+                noteList:noteList,
+                user:user
             });
         }
     }
 
     handleChange = (e) => {
         let len = e.target.value.length;
-        if(len < 15){
+        if(len < 20){
             this.setState({
                 info:e.target.value
             });
@@ -54,16 +65,40 @@ export default class NotePad extends React.Component{
         }   
     }
 
-    handleClick = (e) => {
+    handleClick = async (e) => {
         let info = this.state.info;
         if(!info){
             message.info('请输入便签内容！');
         }
         else{
-            if(this.online){
-
+            if(this.state.online){
+                console.log('在线用户完成任务');
+                let token = localStorage.getItem('token');
+                //修改数据库数据，获取noteID
+                let noteID = await axios.post(`https://qnote.qfstudio.net/api/note/addTask`,{
+                    token:token,
+                    noteContent:info,
+                    noteRemark:''
+                }).then(res=>{
+                    return res.data.noteID
+                })
+                console.log(noteID);
+                //修改本地数据
+                let noteList = JSON.parse(sessionStorage.getItem('noteList') || '[]');
+                noteList.push({
+                    noteID:noteID,
+                    noteContent:info,
+                    noteRemark:'',
+                    done:false
+                });
+                this.setState({
+                    noteList:noteList,
+                    info:''
+                })
+                sessionStorage.setItem('noteList',JSON.stringify(noteList));
             }
             else{
+                console.log('本地用户添加任务')
                 let noteList = JSON.parse(localStorage.getItem('noteList') || '[]');
                 noteList.push({
                     noteID:noteList.length,
@@ -83,6 +118,7 @@ export default class NotePad extends React.Component{
     gNote = (ID) => {
         switch(this.state.online){
             case true:
+                console.log('在线用户放弃事务')
                 let token = localStorage.getItem('token');
                 // 修改本地缓存
                 let noteList = this.state.noteList;
@@ -98,10 +134,12 @@ export default class NotePad extends React.Component{
                 //发送网络请求
                 axios.post(`https://qnote.qfstudio.net/api/note/giveUpTask`,{
                     noteID:ID,
-                    token:token
+                    token:token,
+                    username:this.state.user.username
                 })
                 break;
             default:
+                console.log('本地用户放弃事务')
                 let noteList2 = this.state.noteList;
                 noteList2.forEach((note,index)=>{
                     if(note.noteID === ID){
@@ -119,9 +157,9 @@ export default class NotePad extends React.Component{
     dNote = (ID) => {
         switch(this.state.online){
             case true:
+                console.log('在线用户删除已完成任务')
                 let token = localStorage.getItem('token');
-                break;
-            default:
+                // 修改本地缓存
                 let noteList = this.state.noteList;
                 noteList.forEach((note,index)=>{
                     if(note.noteID === ID){
@@ -131,7 +169,26 @@ export default class NotePad extends React.Component{
                 this.setState({
                     noteList
                 })
-                localStorage.setItem('noteList',JSON.stringify(noteList));
+                sessionStorage.setItem('noteList',JSON.stringify(noteList));
+                //发送网络请求
+                axios.post(`https://qnote.qfstudio.net/api/note/deleteNote`,{
+                    noteID:ID,
+                    token:token,
+                    username:this.state.user.username
+                })
+                break;
+            default:
+                console.log('本地用户删除已完成任务')
+                let noteList2 = this.state.noteList;
+                noteList2.forEach((note,index)=>{
+                    if(note.noteID === ID){
+                        noteList2.splice(index,1);
+                    }
+                })
+                this.setState({
+                    noteList2
+                })
+                localStorage.setItem('noteList',JSON.stringify(noteList2));
                 break;
         }
     }
@@ -139,19 +196,38 @@ export default class NotePad extends React.Component{
     cNote = (ID) => {
         switch(this.state.online){
             case true:
+                console.log('在线用户完成任务')
                 let token = localStorage.getItem('token');
-                break;
-            default:
+                // 修改本地缓存
                 let noteList = this.state.noteList;
                 noteList.forEach((note,index)=>{
+                    if(note.noteID === ID){
+                        note.done = true;
+                     }
+                })
+                this.setState({
+                    noteList
+                })
+                sessionStorage.setItem('noteList',JSON.stringify(noteList));
+                //发送网络请求
+                axios.post(`https://qnote.qfstudio.net/api/note/completeTask`,{
+                    noteID:ID,
+                    token:token,
+                    username:this.state.user.username
+                })
+                break;
+            default:
+                console.log('本地用户完成任务')
+                let noteList2 = this.state.noteList;
+                noteList2.forEach((note,index)=>{
                     if(note.noteID === ID){
                        note.done = true;
                     }
                 })
                 this.setState({
-                    noteList
+                    noteList2
                 })
-                localStorage.setItem('noteList',JSON.stringify(noteList));
+                localStorage.setItem('noteList',JSON.stringify(noteList2));
                 break;
         }
     }
