@@ -46,17 +46,26 @@
         height: 100%;
         background: inherit;
 
-        .avatar-area{
-            position: relative;
-            top: -3rem;
+        .message-box{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 3rem;
+
+            .avatar-area{
+                position: relative;
+                margin-bottom: 1rem;
+            }
         }
+        
 
         .signin-cancel,.signup-cancel{
             position: absolute;
             font-size: 2rem;
             right: 1rem;
             top: 1rem;
-            color: rgba(47, 54, 64,.4);
+            color: rgba(47, 54, 64,1.0);
         }
 
         .input-bar{
@@ -76,7 +85,7 @@
                 border-right: solid 1px gray;
 
                 i{
-                    color: rgba(47, 54, 64,.4);
+                    color: rgba(47, 54, 64,1.0);
                     font-size: 1.2rem;
                 }
             }

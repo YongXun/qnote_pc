@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar , message , Modal} from 'antd';
+import { Avatar , message , Modal , Statistic, Row , Col , Progress} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import anime from 'animejs';
 import axios from 'axios';
@@ -309,19 +309,37 @@ class UserPad extends React.Component{
                     >
                         <p>是否退出登录?</p>
                     </Modal>
-                    <div className="avatar-area">
-                        {/* 头像组件 */}
-                        <Avatar 
-                        size={128}
-                        src={this.state.avatarURL?this.state.avatarURL:''}
-                        icon={<UserOutlined/>}
-                        />
-                        <div className={this.state.online?'.hide':'signin'}>
-                            {/* 上传/更换头像 */}
+                    <div className="message-box">
+                        <div className="avatar-area">
+                            {/* 头像组件 */}
+                            <Avatar 
+                            size={128}
+                            src={this.state.avatarURL?this.state.avatarURL:''}
+                            icon={<UserOutlined/>}
+                            />
+                            <div className={this.state.online?'.hide':'signin'}>
+                                {/* 上传/更换头像 */}
+                            </div>
+                        </div>
+                        <div>
+                            用户:{this.state.online?this.state.user.username:"游客"}
                         </div>
                     </div>
-                    <div>
-                        用户:{this.state.online?this.state.user.username:"游客"}
+                    <div className={this.state.online?'showpad':'hidden'}>
+                    <Row gutter={48}>
+                        <Col span={6}>
+                            <Statistic title="当前事务数" value={this.state.user.currentNoteNum} />
+                        </Col>
+                        <Col span={6}>
+                            <Statistic title="历史完成数" value={this.state.user.completeNoteNum} />
+                        </Col>
+                        <Col span={6}>
+                            <Statistic title="历史放弃数" value={this.state.user.giveUpNoteNum} />
+                        </Col>
+                        <Col span={6}>
+                            <Statistic title="历史事务数" value={this.state.user.noteNum} />
+                        </Col>
+                    </Row>
                     </div>
                     <div className="signinpad">
                     <div className="signin">
