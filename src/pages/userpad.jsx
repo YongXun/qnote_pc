@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar , message , Modal , Statistic, Row , Col , Progress} from 'antd';
+import { Avatar , message , Modal , Statistic, Row , Col , Progress , Button , Input} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import anime from 'animejs';
 import axios from 'axios';
@@ -20,7 +20,7 @@ class UserPad extends React.Component{
         super(props);
         this.state = {
             online:false,
-            avatarURL:'',
+            avatarURL:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
             signin_email:'',
             signin_password:'',
             signup_email:'',
@@ -183,7 +183,12 @@ class UserPad extends React.Component{
             message.success('登录成功');
         })
         .catch((err)=>{
-            message.info('登录失败，请检查您的邮箱与密码')
+            message.info('登录失败，请检查您的邮箱与密码');
+            return
+        })
+        this.setState({
+            signin_email:'',
+            signin_password:''
         })
         axios.get(`https://qnote.qfstudio.net/api/user/getMessage`,{
             params:{
@@ -304,8 +309,8 @@ class UserPad extends React.Component{
         return(
             <div  className="userpad-wrapper">
                  <header>
-                    <button className="signin-btn" onClick={this.state.online?this.showModal.bind(this):this.showSignIn.bind(this)}>{this.state.online?'退出':'登录'}</button>
-                    <button className="signup-btn" onClick={this.showSignUp.bind(this)}>注册</button>
+                    <Button type="primary" className="signin-btn" onClick={this.state.online?this.showModal.bind(this):this.showSignIn.bind(this)}>{this.state.online?'退出':'登录'}</Button>
+                    <Button type="primary" className="signup-btn" onClick={this.showSignUp.bind(this)}>注册</Button>
                 </header>
                 <main>
                     <Modal
@@ -358,7 +363,7 @@ class UserPad extends React.Component{
                         <form>
                             <div className="input-bar">
                                 <div className="icon">
-                                    <i className="iconfont icon-youxiang"></i>
+                                    <i className="iconfont icon-youxiang1"></i>
                                 </div>
                                 <input value={this.state.signin_email} type="text" placeholder="请输入您的邮箱" onChange={(e)=>{this.setState({signin_email:e.target.value})}}/>
                             </div>
@@ -382,7 +387,7 @@ class UserPad extends React.Component{
                             <div>
                                 <div className="input-bar">
                                     <div className="icon">
-                                        <i className="iconfont icon-youxiang"></i>
+                                        <i className="iconfont con-youxiang1"></i>
                                     </div>
                                     <input type="text" placeholder="请输入您的邮箱" value={this.state.signup_email} onChange={(e)=>{this.setState({signup_email:e.target.value})}}/>
                                 </div>
