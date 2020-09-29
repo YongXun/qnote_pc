@@ -387,7 +387,7 @@ class UserPad extends React.Component{
                             <div>
                                 <div className="input-bar">
                                     <div className="icon">
-                                        <i className="iconfont con-youxiang1"></i>
+                                        <i className="iconfont icon-youxiang1"></i>
                                     </div>
                                     <input type="text" placeholder="请输入您的邮箱" value={this.state.signup_email} onChange={(e)=>{this.setState({signup_email:e.target.value})}}/>
                                 </div>
