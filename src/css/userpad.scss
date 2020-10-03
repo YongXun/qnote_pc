@@ -64,14 +64,27 @@
                 font-size: 1.5rem;
             }
         }
-        
 
+        .message{
+            position: relative;
+
+            .refresh{
+                display: inline-block;
+                width: 1.5rem;
+                height: 1.5rem;
+                line-height: 1.5rem;
+            }
+            .refresh i{
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        
         .signin-cancel,.signup-cancel{
             position: absolute;
             font-size: 2rem;
             right: 1rem;
             top: 1rem;
-            color: rgba(47, 54, 64,1.0);
         }
 
         .input-bar{

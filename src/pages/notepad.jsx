@@ -106,6 +106,11 @@ export default class NotePad extends React.Component{
                     noteRemark:'',
                     done:false
                 });
+                // 修改用户数据
+                let user = JSON.parse(localStorage.getItem('user'));
+                user.currentNoteNum++;
+                user.noteNum++;
+                localStorage.setItem('user',JSON.stringify(user))
                 this.setState({
                     noteList:noteList,
                     info:''
@@ -146,6 +151,11 @@ export default class NotePad extends React.Component{
                         noteList2.splice(index,1);
                     }
                 })
+                // 修改用户数据
+                let user = JSON.parse(localStorage.getItem('user'));
+                user.giveUpNoteNum++;
+                user.currentNoteNum--;
+                localStorage.setItem('user',JSON.stringify(user))
                 this.setState({
                     noteList2
                 })
@@ -227,6 +237,11 @@ export default class NotePad extends React.Component{
                 this.setState({
                     noteList2
                 })
+                // 修改用户数据
+                let user = JSON.parse(localStorage.getItem('user'));
+                user.completeNoteNum++;
+                user.currentNoteNum--;
+                localStorage.setItem('user',JSON.stringify(user))
                 localStorage.setItem('noteList',JSON.stringify(noteList2));
                 break;
         }

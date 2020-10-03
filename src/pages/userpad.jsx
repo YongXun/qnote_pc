@@ -86,9 +86,22 @@ class UserPad extends React.Component{
                         })
                     }
                 }
-                // 无效token
+                // 无效token,本地用户
                 else{
                     localStorage.removeItem('token');
+                    let user = localStorage.getItem('user');
+                    if(user === null){
+                        user = {
+                            noteNum:0,
+                            completeNoteNum:0,
+                            currentNoteNum:0,
+                            giveUpNoteNum:0
+                        };
+                        localStorage.setItem('user',JSON.stringify(user));
+                    }
+                    this.setState({
+                        user:user
+                    });
                     return;
                 }
             })
@@ -304,6 +317,53 @@ class UserPad extends React.Component{
         })
     }
 
+    //刷新数据
+    async refresh(){
+        anime({
+            targets:'.refresh',
+            rotate:[
+                {value:'360deg',duration:10000,easing: 'linear'},
+                {value:'0deg',},
+            ]
+        })
+        switch(this.state.online){
+            case true:
+                axios.get(`https://qnote.qfstudio.net/api/user/getMessage`,{
+                    params:{
+                        token:localStorage.getItem('token')
+                    }
+                })
+                .then(res=>{
+                    this.setState({
+                        user:res.data.user
+                    })
+                    sessionStorage.setItem('user',JSON.stringify(res.data.user));
+                    sessionStorage.setItem('noteList',JSON.stringify(res.data.note));
+                    message.success('刷新成功！')
+                    //隐藏登录框
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+                break;
+            default:
+                let user = localStorage.getItem('user');
+                if(user === null){
+                    user = {
+                        noteNum:0,
+                        completeNoteNum:0,
+                        currentNoteNum:0,
+                        giveUpNoteNum:0
+                    };
+                    localStorage.setItem('user',JSON.stringify(user));
+                }
+                this.setState({
+                    user:user
+                });
+                break;
+        }
+    }
+
 
     render(){
         return(
@@ -341,21 +401,25 @@ class UserPad extends React.Component{
                             用户:{this.state.online?this.state.user.username:"游客"}
                         </div>
                     </div>
-                    <div className={this.state.online?'showpad':'hidden'}>
-                    <Row gutter={48}>
-                        <Col span={6}>
-                            <Statistic title="当前事务数" value={this.state.user.currentNoteNum} />
-                        </Col>
-                        <Col span={6}>
-                            <Statistic title="历史完成数" value={this.state.user.completeNoteNum} />
-                        </Col>
-                        <Col span={6}>
-                            <Statistic title="历史放弃数" value={this.state.user.giveUpNoteNum} />
-                        </Col>
-                        <Col span={6}>
-                            <Statistic title="历史事务数" value={this.state.user.noteNum} />
-                        </Col>
-                    </Row>
+                    <div className="message">
+                        <div className="refresh">
+                            <i className="iconfont icon-shuaxin" title="刷新数据" onClick={this.refresh.bind(this)}></i>
+                        </div>
+                        
+                        <Row gutter={48}>
+                            <Col span={6}>
+                                <Statistic title="当前事务数" value={this.state.user.currentNoteNum} />
+                            </Col>
+                            <Col span={6}>
+                                <Statistic title="历史完成数" value={this.state.user.completeNoteNum} />
+                            </Col>
+                            <Col span={6}>
+                                <Statistic title="历史放弃数" value={this.state.user.giveUpNoteNum} />
+                            </Col>
+                            <Col span={6}>
+                                <Statistic title="历史事务数" value={this.state.user.noteNum} />
+                            </Col>
+                        </Row>
                     </div>
                     <div className="signinpad">
                     <div className="signin">
