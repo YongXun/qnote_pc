@@ -43,6 +43,7 @@ class UserPad extends React.Component{
     }
 
     componentWillMount = async () => {
+        console.log('123')
         let token = localStorage.getItem('token');
         if(token !== null){
             await axios.post(`https://qnote.qfstudio.net/api/authToken`,{
@@ -89,7 +90,7 @@ class UserPad extends React.Component{
                 // 无效token,本地用户
                 else{
                     localStorage.removeItem('token');
-                    let user = localStorage.getItem('user');
+                    let user = JSON.parse(localStorage.getItem('user'));
                     if(user === null){
                         user = {
                             noteNum:0,
@@ -102,11 +103,24 @@ class UserPad extends React.Component{
                     this.setState({
                         user:user
                     });
-                    return;
                 }
             })
         }
-        
+        else{
+            let user = JSON.parse(localStorage.getItem('user'));
+            if(user === null){
+                user = {
+                    noteNum:0,
+                    completeNoteNum:0,
+                    currentNoteNum:0,
+                    giveUpNoteNum:0
+                };
+                localStorage.setItem('user',JSON.stringify(user));
+            }
+            this.setState({
+                user:user
+            });
+        }
     }
 
     // 显示登录框
@@ -347,7 +361,7 @@ class UserPad extends React.Component{
                 })
                 break;
             default:
-                let user = localStorage.getItem('user');
+                let user = JSON.parse(localStorage.getItem('user'));
                 if(user === null){
                     user = {
                         noteNum:0,

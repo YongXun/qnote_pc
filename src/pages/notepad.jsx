@@ -113,7 +113,8 @@ export default class NotePad extends React.Component{
                 localStorage.setItem('user',JSON.stringify(user))
                 this.setState({
                     noteList:noteList,
-                    info:''
+                    info:'',
+                    user:user
                 })
                 localStorage.setItem('noteList',JSON.stringify(noteList));
             }
