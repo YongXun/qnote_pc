@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar , message , Modal , Statistic, Row , Col , Progress , Button , Input} from 'antd';
+import { Avatar , message , Modal , Statistic, Row , Col , Progress , Button , Input ,Spin} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import anime from 'animejs';
 import axios from 'axios';
@@ -38,7 +38,8 @@ class UserPad extends React.Component{
                 completeNoteNum:0,
                 currentNoteNum:0,
                 giveUpNoteNum:0
-            }
+            },
+            loading:false
         }
     }
 
@@ -56,7 +57,6 @@ class UserPad extends React.Component{
                     })
                     let user = JSON.parse(sessionStorage.getItem('user') || '[]');
                     let noteList = JSON.parse(sessionStorage.getItem('noteList') || '[]');
-                    console.log(user === null)
                     if(user.length === 0){
                         axios.get(`https://qnote.qfstudio.net/api/user/getMessage`,{
                             params:{
@@ -333,6 +333,9 @@ class UserPad extends React.Component{
 
     //刷新数据
     async refresh(){
+        this.setState({
+            loading:true
+        })
         anime({
             targets:'.refresh',
             rotate:[
@@ -353,7 +356,10 @@ class UserPad extends React.Component{
                     })
                     sessionStorage.setItem('user',JSON.stringify(res.data.user));
                     sessionStorage.setItem('noteList',JSON.stringify(res.data.note));
-                    message.success('刷新成功！')
+                    message.success('刷新成功！');
+                    this.setState({
+                        loading:false
+                    })
                     //隐藏登录框
                 })
                 .catch((err)=>{
@@ -371,10 +377,11 @@ class UserPad extends React.Component{
                     };
                     localStorage.setItem('user',JSON.stringify(user));
                 }
+                message.success('刷新成功！');
                 this.setState({
-                    user:user
-                });
-                message.success('刷新成功！')
+                    user:user,
+                    loading:false
+                })
                 break;
         }
     }
@@ -420,21 +427,22 @@ class UserPad extends React.Component{
                         <div className="refresh">
                             <i className="iconfont icon-shuaxin" title="刷新数据" onClick={this.refresh.bind(this)}></i>
                         </div>
-                        
-                        <Row gutter={48}>
-                            <Col span={6}>
-                                <Statistic title="当前事务数" value={this.state.user.currentNoteNum} />
-                            </Col>
-                            <Col span={6}>
-                                <Statistic title="历史完成数" value={this.state.user.completeNoteNum} />
-                            </Col>
-                            <Col span={6}>
-                                <Statistic title="历史放弃数" value={this.state.user.giveUpNoteNum} />
-                            </Col>
-                            <Col span={6}>
-                                <Statistic title="历史事务数" value={this.state.user.noteNum} />
-                            </Col>
-                        </Row>
+                        <Spin spinning={this.state.loading}>
+                            <Row gutter={48}>
+                                <Col span={6}>
+                                    <Statistic title="当前事务数" value={this.state.user.currentNoteNum} />
+                                </Col>
+                                <Col span={6}>
+                                    <Statistic title="历史完成数" value={this.state.user.completeNoteNum} />
+                                </Col>
+                                <Col span={6}>
+                                    <Statistic title="历史放弃数" value={this.state.user.giveUpNoteNum} />
+                                </Col>
+                                <Col span={6}>
+                                    <Statistic title="历史事务数" value={this.state.user.noteNum} />
+                                </Col>
+                            </Row>
+                        </Spin>      
                     </div>
                     <div className="signinpad">
                     <div className="signin">

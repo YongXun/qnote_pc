@@ -4,6 +4,7 @@ import { message } from 'antd';
 import UserPad from './pages/userpad'
 import NotePad from './pages/notepad'
 import MottoPad from './pages/mottopad'
+import DatePad from './pages/datepad'
 import './App.scss';
 
 message.config({
@@ -37,7 +38,7 @@ export default class App extends React.Component{
             </section>
             <section>
               <i className="iconfont icon-rili"></i> 
-              <Link onClick={()=>{message.info('功能维护中')}}>纪念日</Link>
+              <Link to="./date">纪念日</Link>
             </section>
             <section>
               <i className="iconfont icon-liuyan"></i> 
@@ -51,6 +52,7 @@ export default class App extends React.Component{
           <main className="container">
             <Route exact path="/" component={UserPad}></Route>
             <Route path="/note" component={NotePad}></Route>
+            <Route path="/date" component={DatePad}></Route>
             <Route path="/motto" component={MottoPad}></Route>
           </main>
         </Router>
