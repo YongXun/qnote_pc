@@ -36,7 +36,7 @@ export default class App extends React.Component{
               <Link to="/note">事务列表</Link>
             </section>
             <section>
-              <i className="iconfont icon-icon-test"></i> 
+              <i className="iconfont icon-rili"></i> 
               <Link onClick={()=>{message.info('功能维护中')}}>纪念日</Link>
             </section>
             <section>

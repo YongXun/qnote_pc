@@ -360,6 +360,7 @@ class UserPad extends React.Component{
                 this.setState({
                     user:user
                 });
+                message.success('刷新成功！')
                 break;
         }
     }
