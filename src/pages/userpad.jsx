@@ -1,6 +1,7 @@
 import React from 'react'
-import { Avatar , message , Modal , Statistic, Row , Col , Progress , Button , Input ,Spin} from 'antd';
+import { Avatar , message , Modal , Statistic, Row , Col , Progress , Button , Input ,Spin , Upload} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import anime from 'animejs';
 import axios from 'axios';
 import '../css/userpad.scss';
@@ -20,7 +21,7 @@ class UserPad extends React.Component{
         super(props);
         this.state = {
             online:false,
-            avatarURL:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            avatarURL:'',
             signin_email:'',
             signin_password:'',
             signup_email:'',
@@ -39,7 +40,9 @@ class UserPad extends React.Component{
                 currentNoteNum:0,
                 giveUpNoteNum:0
             },
-            loading:false
+            loading:false,
+            upLoading:false,
+            imageUrl:'',
         }
     }
 
@@ -385,9 +388,84 @@ class UserPad extends React.Component{
                 break;
         }
     }
+    
+    //显示上传头像按钮
+    showUpLoad = () => {
+        anime({
+            targets:'.ant-avatar',
+            zIndex:'-999'
+        })
+    }
+
+    //隐藏上传头像按钮
+    hideUpLoad = () => {
+        anime({
+            targets:'.ant-avatar',
+            zIndex:'2'
+        })
+    }
+
+    // 
+    avatarChange = async (info)=> {
+        if(!this.state.online){message.info('暂不支持本地用户上传头像！');return;}
+        const token = localStorage.getItem('token');
+        const fileReader = new FileReader();
+        const avatar = document.querySelector('#avatar-loader').files[0];
+        // console.log(avatar)
+        if(avatar.type !== 'image/jpeg' && avatar.type !== 'image/png' && avatar.type !== 'image/jpg'){
+            console.log(avatar.type)
+            message.info('仅支持JPEG和PNG格式的图片！');
+            return;
+        }
+        const isLt2M = avatar.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          message.info('图片大小不可大于2MB！');
+          return;
+        }
+        fileReader.readAsDataURL(avatar);
+        // 头像修改
+        fileReader.onload = function () {
+            document.querySelector('#foo').setAttribute('src',fileReader.result)
+        };
+        //头像上传
+        const formData = new FormData();
+        const xhr = new XMLHttpRequest();
+        formData.append('avatar', avatar);
+        xhr.open("POST",`https://qnote.qfstudio.net/api/user/avatar`);
+        xhr.setRequestHeader('Content-Type','multipart/form-data');
+        xhr.setRequestHeader('Token',token);
+        xhr.onload = function () {
+    　　　　if (xhr.status === 200) {
+    　　　　　　console.log('上传成功');
+    　　　　} else {
+    　　　　　　console.log('出错了');
+    　　　　}
+    　　};
+    　　xhr.send(formData);
+    }
+
+    beforeUpload(file) {
+        if(!this.state.online){message.info('暂不支持本地用户上传头像！');return;}
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+          message.error('You can only upload JPG/PNG file!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          message.error('Image must smaller than 2MB!');
+        }
+        return isJpgOrPng && isLt2M;
+    }
 
 
     render(){
+        const uploadButton = (
+            <div>
+              {this.state.upLoading ? <LoadingOutlined /> : <PlusOutlined />}
+              <div>上传头像</div>
+            </div>
+          );
+
         return(
             <div  className="userpad-wrapper">
                  <header>
@@ -410,14 +488,20 @@ class UserPad extends React.Component{
                     <div className="message-box">
                         <div className="avatar-area">
                             {/* 头像组件 */}
-                            <Avatar 
+                            <Avatar
+                            shape="square" 
                             size={150}
                             src={this.state.avatarURL?this.state.avatarURL:''}
                             icon={<UserOutlined/>}
                             />
-                            <div className={this.state.online?'.hide':'signin'}>
-                                {/* 上传/更换头像 */}
+                            <img src={this.state.online?this.state.avatarURL:''} alt="" id="foo" width="150" height="150"/>
+                            {/* 上传头像按钮 */}
+                            <div className="uploader">
+                                <div>
+                                    <input type="file" id="avatar-loader" onChange={this.avatarChange.bind(this)}/>
+                                </div>
                             </div>
+                            
                         </div>
                         <div className="username">
                             用户:{this.state.online?this.state.user.username:"游客"}

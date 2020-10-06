@@ -155,9 +155,6 @@ class DatePad extends React.Component{
                 })
             }
         }
-        this.countString("2020-10-3")
-        this.countString("2020-10-4")
-        this.countString("2020-10-5")
     }
 
     render(){
