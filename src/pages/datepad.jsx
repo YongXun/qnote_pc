@@ -171,6 +171,7 @@ class DatePad extends React.Component{
                         memorial:res.data.memorial
                     })
                 })
+                return;
             }
             this.setState({
                 online:true,
