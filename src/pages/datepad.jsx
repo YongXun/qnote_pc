@@ -15,7 +15,7 @@ class DatePad extends React.Component{
             input:{
                 title:'',
                 date:''
-            }
+            },
         }
     }
 

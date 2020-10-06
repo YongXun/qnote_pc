@@ -21,7 +21,7 @@ class UserPad extends React.Component{
         super(props);
         this.state = {
             online:false,
-            avatarURL:'',
+            avatarUrl:'',
             signin_email:'',
             signin_password:'',
             signup_email:'',
@@ -38,7 +38,8 @@ class UserPad extends React.Component{
                 noteNum:0,
                 completeNoteNum:0,
                 currentNoteNum:0,
-                giveUpNoteNum:0
+                giveUpNoteNum:0,
+                avatarUrl:''
             },
             loading:false,
             upLoading:false,
@@ -47,7 +48,6 @@ class UserPad extends React.Component{
     }
 
     componentWillMount = async () => {
-        console.log('123')
         let token = localStorage.getItem('token');
         if(token !== null){
             await axios.post(`https://qnote.qfstudio.net/api/authToken`,{
@@ -76,6 +76,13 @@ class UserPad extends React.Component{
                                 user:res.data.user,
                                 noteList:res.data.noteList
                             })
+                            // 查看是否有头像
+                            if(res.data.user.avatarUrl){
+                                this.setState({
+                                    avatarUrl:`https://qnote.qfstudio.net${res.data.user.avatarUrl}`
+                                })
+                            }
+                            console.log()
                             //隐藏登录框
                             this.hideShowIn();
                         })
@@ -84,6 +91,13 @@ class UserPad extends React.Component{
                         })
                     }
                     else{
+                        console.log(user)
+                        console.log(user.avatarUrl)
+                        if(user.avatarUrl){
+                            this.setState({
+                                avatarUrl:`https://qnote.qfstudio.net${user.avatarUrl}`
+                            })
+                        }
                         this.setState({
                             user:user,
                             noteList:noteList
@@ -231,6 +245,11 @@ class UserPad extends React.Component{
             })
             sessionStorage.setItem('user',JSON.stringify(res.data.user));
             sessionStorage.setItem('noteList',JSON.stringify(res.data.note));
+            if(res.data.user.avatarUrl){
+                this.setState({
+                    avatarUrl:`https://qnote.qfstudio.net${res.data.user.avatarUrl}`
+                })
+            }
             //隐藏登录框
             this.hideShowIn();
         })
@@ -407,7 +426,7 @@ class UserPad extends React.Component{
 
     // 
     avatarChange = async (info)=> {
-        if(!this.state.online){message.info('暂不支持本地用户上传头像！');return;}
+        if(!this.state.online){message.info('暂不支持离线用户上传头像！');return;}
         const token = localStorage.getItem('token');
         const fileReader = new FileReader();
         const avatar = document.querySelector('#avatar-loader').files[0];
@@ -432,13 +451,12 @@ class UserPad extends React.Component{
         const xhr = new XMLHttpRequest();
         formData.append('avatar', avatar);
         xhr.open("POST",`https://qnote.qfstudio.net/api/user/avatar`);
-        xhr.setRequestHeader('Content-Type','multipart/form-data');
         xhr.setRequestHeader('Token',token);
         xhr.onload = function () {
     　　　　if (xhr.status === 200) {
-    　　　　　　console.log('上传成功');
+    　　　　　　message.success('上传成功')
     　　　　} else {
-    　　　　　　console.log('出错了');
+    　　　　　　message.info('上传失败，请检查您的网络')
     　　　　}
     　　};
     　　xhr.send(formData);
@@ -462,7 +480,7 @@ class UserPad extends React.Component{
         const uploadButton = (
             <div>
               {this.state.upLoading ? <LoadingOutlined /> : <PlusOutlined />}
-              <div>上传头像</div>
+              <div>修改头像</div>
             </div>
           );
 
@@ -488,7 +506,12 @@ class UserPad extends React.Component{
                     <div className="message-box">
                         <div className="avatar-area">
                             {/* 头像显示 */}
-                            <img src={this.state.avatarURL?this.state.avatarURL:"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt="" id="avatar" width="200" height="200"/>
+                            <img
+                            src={this.state.online?(this.state.avatarUrl?this.state.avatarUrl:"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"):"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} 
+                            alt="" 
+                            id="avatar" 
+                            width="200" 
+                            height="200"/>
                             {/* 上传头像按钮 */}
                             <div className="uploader">
                                 <div>

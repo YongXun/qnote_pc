@@ -13,7 +13,8 @@ export default class MottoPad extends React.Component{
                 hitokoto:"会有那么一天",
                 from_who:'',
                 from:'原创'
-            }
+            },
+            color:`rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},.5)`
         }
     }
 
@@ -44,20 +45,22 @@ export default class MottoPad extends React.Component{
     render(){
         return(
             <div className="mottopad-wrapper">
-                {/* 语录 */}
-                <div className="motto-wrapper">
+                <header style={{backgroundColor:this.state.color}}>
+                </header>
+                <main className="motto-wrapper">
+                     {/* 语录 */}
                     <div className="motto">
-                        <span className="hitokoto">{this.state.motto.hitokoto}</span>
-                        <span className="from">{`——${this.state.motto.rom_who?this.state.motto.rom_who:''}《${this.state.motto.from}》`}</span>
+                        <span style={{color:this.state.color}} className="hitokoto">{this.state.motto.hitokoto}</span>
+                        <span style={{color:this.state.color}} className="from">{`——${this.state.motto.rom_who?this.state.motto.rom_who:''}《${this.state.motto.from}》`}</span>
                     </div>
-                </div>
-                {/* 工具箱 */}
-                <div className="tool">
-                    {/* 换一条 */}
+                </main>
+               <footer className="tool"  style={{backgroundColor:this.state.color}}> 
+                   {/* 换一条 */}
                     <button onClick={this.getMotto.bind(this)}><i className="iconfont icon-shuaxin"></i>换一条</button>
                     {/* 点赞 */}
                     <button onClick={this.copy.bind(this)}><i className="iconfont icon-bianjibijishishouxie"></i>复制</button>
-                </div>
+               </footer>
+                
                 {/* 粘贴板 */}
                 <div id="copy"></div>
             </div>

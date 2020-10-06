@@ -15,7 +15,7 @@
     align-items: center;
     width: 20%;
     height: 100%;
-    background: #2f3640;
+    background: rgba(113, 128, 147,.5);
     backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(1px);
 
@@ -28,7 +28,7 @@
       height: 8%;
       text-align: center;
       // border-top: solid 1px rgba(113, 128, 147,1.0);
-      border-bottom: solid 1px rgba(113, 128, 147,1.0);
+      border-bottom: solid 1px #fff;
       i{
         display: inline-block;
         width: 20%;
