@@ -15,8 +15,17 @@
         width: 80%;
         height: 20%;
 
-        input{
+        .title-input{
+            width:15rem;
+            height: 2rem;
+            line-height: 2rem;
+            font-size: 1.2rem;
+            text-align: center;
             outline: none;
+        }
+
+        button{
+            color: #Fff;
         }
     }
 

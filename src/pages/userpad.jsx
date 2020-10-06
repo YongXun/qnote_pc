@@ -425,7 +425,7 @@ class UserPad extends React.Component{
         fileReader.readAsDataURL(avatar);
         // 头像修改
         fileReader.onload = function () {
-            document.querySelector('#foo').setAttribute('src',fileReader.result)
+            document.querySelector('#avatar').setAttribute('src',fileReader.result)
         };
         //头像上传
         const formData = new FormData();
@@ -487,21 +487,15 @@ class UserPad extends React.Component{
                     </Modal>
                     <div className="message-box">
                         <div className="avatar-area">
-                            {/* 头像组件 */}
-                            <Avatar
-                            shape="square" 
-                            size={150}
-                            src={this.state.avatarURL?this.state.avatarURL:''}
-                            icon={<UserOutlined/>}
-                            />
-                            <img src={this.state.online?this.state.avatarURL:''} alt="" id="foo" width="150" height="150"/>
+                            {/* 头像显示 */}
+                            <img src={this.state.avatarURL?this.state.avatarURL:"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt="" id="avatar" width="200" height="200"/>
                             {/* 上传头像按钮 */}
                             <div className="uploader">
                                 <div>
-                                    <input type="file" id="avatar-loader" onChange={this.avatarChange.bind(this)}/>
+                                    <Button type="primary"><label htmlFor="avatar-loader" className="upload-btn">上传头像</label></Button>
+                                    <input name="avatar" type="file" id="avatar-loader" onChange={this.avatarChange.bind(this)}/>
                                 </div>
                             </div>
-                            
                         </div>
                         <div className="username">
                             用户:{this.state.online?this.state.user.username:"游客"}

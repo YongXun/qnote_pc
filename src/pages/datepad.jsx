@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-import { DatePicker, message } from 'antd';
+import { DatePicker, message , Button} from 'antd';
 import '../css/datepad.scss'
 
 class DatePad extends React.Component{
@@ -112,8 +112,26 @@ class DatePad extends React.Component{
             message.info('请确保信息填写正确！');
             return;
         }
+        console.log(this.state.online)
         switch(this.state.online){
             case true:
+                const token = localStorage.getItem('token');
+                console.log('添加纪念日-在线模式');
+                axios.post(`https://qnote.qfstudio.net/api/memorial/add`,{token,...this.state.input}).then(res=>{
+                    message.success('添加成功！');
+                }).catch(err=>{
+                    message.info('添加失败，请检查您的网络！');
+                })
+                let memorialOnLine = JSON.parse(sessionStorage.getItem('memorial') || '[]');
+                memorialOnLine.push(this.state.input);
+                sessionStorage.setItem('memorial',JSON.stringify(memorialOnLine));
+                this.setState({
+                    memorial:memorialOnLine,
+                    input:{
+                        title:'',
+                        date:this.state.input.date
+                    }
+                })
                 break;
             default:
                 console.log('添加纪念日-离线模式')
@@ -135,7 +153,7 @@ class DatePad extends React.Component{
         let token = localStorage.getItem('token');
         if(!token){
             console.log('纪念日列表-离线状态');
-            let memorial = JSON.parse(localStorage.getItem('memorial') || JSON.stringify([{title:'中国人民共和国成立',date:'1949-10-01'}]));
+            let memorial = JSON.parse(localStorage.getItem('memorial') || JSON.stringify([{title:'中国人民共和国成立71周年',date:'2020-10-01'}]));
             this.setState({
                 online:false,
                 memorial:memorial
@@ -154,6 +172,10 @@ class DatePad extends React.Component{
                     })
                 })
             }
+            this.setState({
+                online:true,
+                memorial:memorial
+            })
         }
     }
 
@@ -161,9 +183,9 @@ class DatePad extends React.Component{
         return(
             <div className="datepad-wrapper">
                 <div className="tool">
-                    <input type="text" value={this.state.input.title} onChange={this.titleChange.bind(this)}/>
+                    <input type="text" value={this.state.input.title} onChange={this.titleChange.bind(this)} placeholder="请输入纪念日主题" className="title-input"/>
                     <DatePicker showToday={true} onChange={this.dateChange.bind(this)}></DatePicker>                
-                    <button onClick={this.submit.bind(this)}>添加纪念日</button>
+                    <Button type="primary" onClick={this.submit.bind(this)}>添加纪念日</Button>
                 </div>
                 <div className="date-list">
                     {
@@ -173,9 +195,6 @@ class DatePad extends React.Component{
                                 <span className="title">{date.title}</span>
                                 <span className="date">{date.date}</span>
                                 <span className={this.count(date.date)===0?'count':'hidden'}>今天</span>  
-                                {
-                                   <span>1</span>
-                                }
                                 <span className={this.count(date.date)===0?'hidden':'count'}>{`${Math.abs(this.count(date.date))}${this.count(date.date)<0?'天前':'天后'}`}</span>
                             </section>
                             )
